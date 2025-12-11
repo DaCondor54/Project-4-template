@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
+import * as useFlemHook from '@/hooks/useFlem';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import * as useFlemHook from '../../hooks/useFlem';
 import { Flem } from './flem.tsx';
 
-vi.mock('../../hooks/useFlem');
+vi.mock('@/hooks/useFlem');
 
 const useFlemSpy = vi.spyOn(useFlemHook, 'useFlem');
 
 const loadingQuery = { data: undefined, isLoading: true, isError: false, isSuccess: false }
-const sucessQuery = { data: {data: {reason: 'flem'}}, isLoading: false, isError: false, isSuccess: true }
+const sucessQuery = { data:  'flem', isLoading: false, isError: false, isSuccess: true }
 const errorQuery = { data: undefined, error: new Error('Network error'), isLoading: false, isError: true, isSuccess: false }
 
 describe('Flem', () => {

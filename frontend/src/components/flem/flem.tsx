@@ -1,4 +1,4 @@
-import { useFlem } from "../../hooks/useFlem"
+import { useFlem } from "@/hooks/useFlem"
 
 export const Flem = () => {  
 
@@ -16,7 +16,7 @@ export const Flem = () => {
   return (
     <>
     <div className="font-bold">
-      Hello World! : {reason?.data.reason}
+      Hello World! : {reason}
     </div>
     </>
   )

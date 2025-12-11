@@ -1,5 +1,5 @@
+import { queryClient } from "@/lib/queryClient";
 import axios from "axios";
-import { queryClient } from "../lib/queryClient";
 
 export const http = axios.create({
     baseURL: 'http://localhost:3000'
