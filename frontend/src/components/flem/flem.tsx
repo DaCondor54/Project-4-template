@@ -1,6 +1,6 @@
-import { useFlem } from "../hooks/useFlem"
+import { useFlem } from "@/hooks/useFlem"
 
-export default function Flem() {  
+export const Flem = () => {  
 
   const { data: reason, isLoading, error } =  useFlem()
 
@@ -16,7 +16,7 @@ export default function Flem() {
   return (
     <>
     <div className="font-bold">
-      Hello World! : {reason?.data.reason}
+      Hello World! : {reason}
     </div>
     </>
   )
