@@ -1,0 +1,15 @@
+services:
+  gateway:
+    container_name: gateway
+    build: 
+      context: .
+      dockerfile: ./Gateway/Dockerfile
+    ports:
+      - 3000:3000
+    
+  resys:
+    container_name: resys
+    build:
+      context: .
+      dockerfile: ./RecommendationSystem/Dockerfile
+  
