@@ -1,0 +1,11 @@
+apiVersion: 1
+contactPoints:
+    - orgId: 1
+      name: Grafana-Localhost
+      receivers:
+        - uid: cf6x86seggmwwf
+          type: discord
+          settings:
+            url: https://discord.com/api/webhooks/1445667137363509248/WdOmYX-7uppe2TgRut1pXjfJ_U3J5O2JZceDLXUOTkS0qApbCxHjGrvVwTW9cFzN8uB1
+            use_discord_username: false
+          disableResolveMessage: false

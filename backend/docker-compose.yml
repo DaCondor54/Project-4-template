@@ -6,10 +6,13 @@ services:
       dockerfile: ./Gateway/Dockerfile
     ports:
       - 3000:3000
+    networks:
+      - monitoring
     
   resys:
     container_name: resys
     build:
       context: .
       dockerfile: ./RecommendationSystem/Dockerfile
-  
+    networks:
+      - monitoring
