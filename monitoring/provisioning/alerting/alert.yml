@@ -1,0 +1,55 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: my-alerts
+      folder: alerts
+      interval: 1m
+      rules:
+        - uid: af6x7lzms701sa
+          title: test
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: PF21AD24DF8EE204F
+              model:
+                editorMode: builder
+                expr: microsoft_aspnetcore_server_kestrel_current_connections
+                instant: true
+                intervalMs: 1000
+                legendFormat: __auto
+                maxDataPoints: 43200
+                range: false
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          isPaused: false
+          notification_settings:
+            receiver: Grafana-Localhost

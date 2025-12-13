@@ -9,7 +9,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build:
+  build-front:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,3 +25,15 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
+  build-back:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.x'
+      - run: dotnet test
+
