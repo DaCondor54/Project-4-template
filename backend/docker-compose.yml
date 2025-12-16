@@ -16,3 +16,8 @@ services:
       dockerfile: ./RecommendationSystem/Dockerfile
     networks:
       - monitoring
+      - db-access
+
+networks:
+  db-access:
+  monitoring:

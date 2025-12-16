@@ -1,5 +1,9 @@
+using MongoDB.Driver;
 using RecommendationSystem.Services;
+using RecommendationSystem.Data.Mongo;
 using Shared;
+using MongoDB.Bson;
+using MongoDB.Driver.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +25,49 @@ app.UseCors(builder =>
     .AllowAnyMethod()
     .AllowAnyOrigin());
 
-app.MapGet("/recommendation", (RecommendationEngine engine) => new  Recommendation(engine.GenerateRecommendation()))
-.WithName("Recommendation");
+const string FLEMS_COLLECTION = "flems";
+
+app.MapPost("/flem", async (RecommendationEngine engine) =>
+{
+    var flem = new  Flem(engine.GenerateRecommendation());
+    
+    var flems = GetCollection<FlemDocument>(FLEMS_COLLECTION);
+
+    await flems.InsertOneAsync(new FlemDocument(ObjectId.GenerateNewId() , flem.FlemRate));
+
+    return flem;
+
+})
+.WithName("AddFlem");
+
+app.MapGet("/averageflem", () =>
+{
+    var flems = GetCollection<FlemDocument>(FLEMS_COLLECTION);
+    
+    try
+    {
+        var averageFlem = flems.AsQueryable().Average(flem => flem.FlemRate);
+        return new Flem(averageFlem);
+    } catch 
+    {
+        return new Flem(0);
+    }        
+}).WithName("GetAverageFlem");
+
+app.MapGet("/flem", async () =>
+{
+    var flems = GetCollection<FlemDocument>(FLEMS_COLLECTION);
+
+    return await flems.AsQueryable().Select(flem => new Flem(flem.FlemRate)).ToListAsync();
+}).WithName("GetFlems");
 
 app.Run();
+
+
+IMongoCollection<T> GetCollection<T>(string collection)
+{
+    var client = new MongoClient(builder.Configuration.GetConnectionString("MongoDB"));
+    var db = client.GetDatabase(builder.Configuration.GetConnectionString("MONGODB_NAME"));
+
+    return db.GetCollection<T>(collection);
+}

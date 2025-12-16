@@ -2,6 +2,7 @@ include:
   - backend/docker-compose.yml
   - frontend/docker-compose.yml
   - monitoring/docker-compose.yml
+  - database/docker-compose.yml
 
 networks:
   monitoring:
