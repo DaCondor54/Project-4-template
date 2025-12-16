@@ -1,5 +1,7 @@
 using Shared;
 using Prometheus;
+using Gateway.Services;
+using Confluent.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
 builder.Services.AddHttpClient(); 
+
+builder.Services.AddSingleton<KafkaClientHandle>();
+builder.Services.AddSingleton<KafkaDependentProducer<string,string>>();
 
 var app = builder.Build();
 
@@ -31,6 +36,7 @@ app.MapGet("/flem", getFlems);
 app.MapPost("/flem", postRequest);
 
 app.MapGet("/averageflem", getAverage);
+app.MapGet("/sendmessage", SendMessage);
 
 
 app.Run();
@@ -77,4 +83,9 @@ async Task<Flem> postRequest(HttpClient httpClient, ILogger<Program> logger)
         logger.LogWarning("Error: {error}", e.Message);
         return new (0);
     }
+}
+
+async Task SendMessage(KafkaDependentProducer<string,string> producer)
+{
+    await producer.ProduceAsync("test-topic", new Message<string,string> { Key="Hello",Value=DateTime.Now.ToString()});
 }
