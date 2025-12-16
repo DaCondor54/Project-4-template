@@ -27,27 +27,54 @@ app.UseCors(builder => builder
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-app.MapGet("/flem", async (HttpClient httpClient, ILogger<Program> logger) =>
+app.MapGet("/flem", getFlems);
+app.MapPost("/flem", postRequest);
+
+app.MapGet("/averageflem", getAverage);
+
+
+app.Run();
+
+async Task<Flem> getAverage(HttpClient httpClient, ILogger<Program> logger) 
 {
     string host = Environment.GetEnvironmentVariable("RECOMMENDATION_SYSTEM_URL") ?? "resys";
     try 
     {
-        var recommendation = await httpClient.GetFromJsonAsync<Recommendation>($"http://{host}:4000/recommendation");
-        string flem = recommendation is null ? "" : $" at {recommendation.Score}";
-
-        logger.LogInformation("Yassir's flem is at {score}", recommendation?.Score);
-
-        return new Flem($"Yassir === Flem${flem}");
+        return (await httpClient.GetFromJsonAsync<Flem>($"http://{host}:4000/averageflem")) ?? new (0);
     } 
     catch(Exception e)
     {
         logger.LogWarning("Error: {error}", e.Message);
-        return new Flem("Yassir === Flem ???");
+        return new (0);
     }
+}
 
-} ).WithName("GetYassFlem");
+async Task<List<Flem>> getFlems(HttpClient httpClient, ILogger<Program> logger)
+{
+    string host = Environment.GetEnvironmentVariable("RECOMMENDATION_SYSTEM_URL") ?? "resys";
+    try 
+    {
+        return (await httpClient.GetFromJsonAsync<List<Flem>>($"http://{host}:4000/flem")) ?? [];
+    } 
+    catch(Exception e)
+    {
+        logger.LogWarning("Error: {error}", e.Message);
+        return [];
+    }
+}
 
-app.Run();
-
-
-record Flem(string Reason);
+async Task<Flem> postRequest(HttpClient httpClient, ILogger<Program> logger)
+{
+    string host = Environment.GetEnvironmentVariable("RECOMMENDATION_SYSTEM_URL") ?? "resys";
+    try 
+    {
+        var result = await httpClient.PostAsync($"http://{host}:4000/flem", null);
+        result.EnsureSuccessStatusCode();
+        return (await  result.Content.ReadFromJsonAsync<Flem>()) ?? new (0);
+    } 
+    catch(Exception e)
+    {
+        logger.LogWarning("Error: {error}", e.Message);
+        return new (0);
+    }
+}

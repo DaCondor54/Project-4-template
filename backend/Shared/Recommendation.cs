@@ -1,3 +1,3 @@
 ﻿namespace Shared;
 
-public record Recommendation(double Score);
+public record Flem(double FlemRate);
