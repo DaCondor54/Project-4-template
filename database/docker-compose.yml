@@ -1,0 +1,30 @@
+services:  
+  mongo:
+    container_name: mongo
+    image: mongo
+    command: --replSet "rs0" --bind_ip localhost,mongo
+    healthcheck:
+      test: echo "$PRIMARY_SETUP" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+    environment:
+      MONGO_INITDB_DATABASE: flemdb    
+    networks:
+      - db-access
+  mongo-repl-1:
+    container_name: mongo-repl-1
+    image: mongo
+    command: --replSet "rs0" --bind_ip localhost,mongo-repl-1
+    networks:
+      - db-access
+  mongo-repl-2:
+    container_name: mongo-repl-2
+    image: mongo
+    command: --replSet "rs0" --bind_ip localhost,mongo-repl-2
+    networks:
+      - db-access
+networks:
+  db-access:

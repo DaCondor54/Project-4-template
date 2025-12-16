@@ -25,7 +25,6 @@ app.UseCors(builder =>
     .AllowAnyMethod()
     .AllowAnyOrigin());
 
-const string FLEM_DB = "flemdb";
 const string FLEMS_COLLECTION = "flems";
 
 app.MapPost("/flem", async (RecommendationEngine engine) =>
@@ -43,12 +42,16 @@ app.MapPost("/flem", async (RecommendationEngine engine) =>
 
 app.MapGet("/averageflem", () =>
 {
-     var flems = GetCollection<FlemDocument>(FLEMS_COLLECTION);
-
-    var averageFlem = flems.AsQueryable().Average(flem => flem.FlemRate );
-
-    return new Flem(averageFlem);
+    var flems = GetCollection<FlemDocument>(FLEMS_COLLECTION);
     
+    try
+    {
+        var averageFlem = flems.AsQueryable().Average(flem => flem.FlemRate);
+        return new Flem(averageFlem);
+    } catch 
+    {
+        return new Flem(0);
+    }        
 }).WithName("GetAverageFlem");
 
 app.MapGet("/flem", async () =>
@@ -64,7 +67,7 @@ app.Run();
 IMongoCollection<T> GetCollection<T>(string collection)
 {
     var client = new MongoClient(builder.Configuration.GetConnectionString("MongoDB"));
-    var db = client.GetDatabase(FLEM_DB);
+    var db = client.GetDatabase(builder.Configuration.GetConnectionString("MONGODB_NAME"));
 
     return db.GetCollection<T>(collection);
 }

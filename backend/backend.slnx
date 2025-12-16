@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Gateway.Tests/Gateway.Tests.csproj" />
+  <Project Path="Gateway/Gateway.csproj" />
+  <Project Path="RecommendationSystem.Tests/RecommendationSystem.Tests.csproj" />
+  <Project Path="RecommendationSystem/RecommendationSystem.csproj" />
+  <Project Path="Shared/Shared.csproj" />
+</Solution>
